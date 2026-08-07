@@ -1,0 +1,67 @@
+{% set name = "mifrix" %}
+{% set version = "0.1.0" %}
+
+package:
+  name: {{ name }}
+  version: {{ version }}
+
+source:
+  path: ..
+
+build:
+  noarch: python
+  script: {{ PYTHON }} -m pip install . --no-deps -vv
+  entry_points:
+    - mifrix-risk-score = mifrix.risk_scores.cli:main
+    - mifrix-score-ap = mifrix.risk_scores.scoring:main_ap
+    - mifrix-score-fp = mifrix.risk_scores.scoring:main_fp
+    - mifrix-preprocess = mifrix.shap.preprocess_cli:main
+    - mifrix-shap = mifrix.shap.cli:main
+    - mifrix-shap-ap = mifrix.shap.tech_cli:main_ap
+    - mifrix-shap-projection = mifrix.shap.projection_cli:main
+    - shap-projection = mifrix.shap.projection_cli:main
+    - mifrix-unpack-resources = mifrix.resources:main
+    - mifrix-example-data = mifrix.examples:main
+
+requirements:
+  host:
+    - python >=3.10
+    - pip
+    - hatchling >=1.25
+  run:
+    - python >=3.10
+    - numpy
+    - pandas
+    - joblib
+    - requests
+    - tqdm
+    - shap
+    - scikit-learn
+    - xgboost
+    - lightgbm
+    - catboost
+    - r-base
+    - r-dplyr
+    - r-ggplot2
+    - r-sp
+
+test:
+  imports:
+    - mifrix
+    - mifrix.risk_scores
+    - mifrix.shap
+  commands:
+    - mifrix-risk-score --help
+    - mifrix-score-ap --help
+    - mifrix-score-fp --help
+    - mifrix-preprocess --help
+    - mifrix-shap --help
+    - mifrix-shap-ap --help
+    - mifrix-shap-projection --help
+    - shap-projection --help
+    - mifrix-unpack-resources --help
+    - mifrix-example-data --help
+
+about:
+  summary: MifRix risk score and AP SHAP explanation pipelines for unseen microbiome data
+  license: Proprietary

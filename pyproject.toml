@@ -1,0 +1,62 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "MifRix"
+version = "0.1.0"
+description = "MifRix risk score and AP SHAP explanation pipelines for unseen microbiome data."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Proprietary" }
+authors = [
+  { name = "Nalin" }
+]
+dependencies = [
+  "numpy",
+  "pandas",
+  "joblib",
+  "requests",
+  "tqdm",
+  "shap",
+  "scikit-learn",
+  "xgboost",
+  "lightgbm",
+  "catboost",
+]
+
+[project.scripts]
+mifrix-risk-score = "mifrix.risk_scores.cli:main"
+mifrix-score-ap = "mifrix.risk_scores.scoring:main_ap"
+mifrix-score-fp = "mifrix.risk_scores.scoring:main_fp"
+mifrix-preprocess = "mifrix.shap.preprocess_cli:main"
+mifrix-shap = "mifrix.shap.cli:main"
+mifrix-shap-ap = "mifrix.shap.tech_cli:main_ap"
+mifrix-shap-projection = "mifrix.shap.projection_cli:main"
+shap-projection = "mifrix.shap.projection_cli:main"
+mifrix-unpack-resources = "mifrix.resources:main"
+mifrix-example-data = "mifrix.examples:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mifrix"]
+exclude = [
+  "**/__pycache__",
+  "**/*.pyc",
+]
+
+[tool.hatch.build.targets.wheel.force-include]
+"src/mifrix/resource_archives" = "mifrix/resource_archives"
+"src/mifrix/example_data" = "mifrix/example_data"
+"src/mifrix/shap/projection.R" = "mifrix/shap/projection.R"
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "src/mifrix",
+  "README.md",
+  "environment.yml",
+  "conda-recipe/meta.yaml",
+]
+exclude = [
+  "**/__pycache__",
+  "**/*.pyc",
+]
