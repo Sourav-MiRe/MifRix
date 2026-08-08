@@ -93,20 +93,20 @@ The copied files are:
 
 ```text
 ./mifrix_examples/
-  wilsonb_2025/
-    WilsonB_2025_AP.csv
-    WilsonB_2025_metadata.csv
+  study1/
+    study1_AP.csv
+    study1_metadata.csv
   projection/
-    WilsonB_2025_IBD_GutInflammation_AP_SHAP.csv
-    WilsonB_2025_projection_metadata.csv
+    study1_IBD_GutInflammation_AP_SHAP.csv
+    study1_projection_metadata.csv
 ```
 
 Example risk scoring:
 
 ```bash
 mifrix-risk-score \
-  ./mifrix_examples/wilsonb_2025/WilsonB_2025_AP.csv \
-  --metadata ./mifrix_examples/wilsonb_2025/WilsonB_2025_metadata.csv \
+  ./mifrix_examples/study1/study1_AP.csv \
+  --metadata ./mifrix_examples/study1/study1_metadata.csv \
   --scores-output-dir ./mifrix_example_outputs/risk
 ```
 
@@ -114,8 +114,8 @@ Example AP SHAP:
 
 ```bash
 mifrix-shap \
-  --ap-input ./mifrix_examples/wilsonb_2025/WilsonB_2025_AP.csv \
-  --metadata ./mifrix_examples/wilsonb_2025/WilsonB_2025_metadata.csv \
+  --ap-input ./mifrix_examples/study1/study1_AP.csv \
+  --metadata ./mifrix_examples/study1/study1_metadata.csv \
   --output-dir ./mifrix_example_outputs/shap \
   --diseases IBD_GutInflammation
 ```
@@ -125,8 +125,8 @@ Example SHAP projection:
 ```bash
 shap-projection \
   --disease IBD_GutInflammation \
-  --shap-csv ./mifrix_examples/projection/WilsonB_2025_IBD_GutInflammation_AP_SHAP.csv \
-  --metadata-csv ./mifrix_examples/projection/WilsonB_2025_projection_metadata.csv \
+  --shap-csv ./mifrix_examples/projection/study1_IBD_GutInflammation_AP_SHAP.csv \
+  --metadata-csv ./mifrix_examples/projection/study1_projection_metadata.csv \
   --output-dir ./mifrix_example_outputs/projection
 ```
 
