@@ -1,4 +1,4 @@
-# MifRix Pipeline
+# MifRix
 
 This repository contains the combined `MifRix` package with code plus a compressed archive of the model, explainer, taxonomy, and FP resources.
 
