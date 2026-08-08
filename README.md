@@ -366,6 +366,61 @@ Options:
 - `--resource-dir`
   - optional directory containing resources unpacked by `mifrix-unpack-resources`
 
+## MifRix Final Score
+
+After generating AP and FP risk scores using the MifRix risk-scoring
+pipeline, the final MifRix score can be calculated using the provided
+R utility.
+
+### Usage
+
+The final-score utility is provided in:
+
+`MifRix_final_score/Compute_MifRix_final_score.R`
+
+Run the utility from the terminal:
+
+```bash
+Rscript MifRix_final_score/Compute_MifRix_final_score.R \
+    <AP_score_file.csv> \
+    <FP_score_file.csv> \
+    <output_file.csv>
+```
+
+### Example
+
+For example, if your AP and FP risk-score files are:
+
+- `AP_scores.csv`
+- `FP_scores.csv`
+
+run:
+
+```bash
+Rscript MifRix_final_score/Compute_MifRix_final_score.R \
+    AP_scores.csv \
+    FP_scores.csv \
+    MifRix_final_scores.csv
+```
+
+This will generate:
+
+`MifRix_final_scores.csv`
+
+### Input
+
+The utility requires:
+
+- An AP risk-score CSV file
+- An FP risk-score CSV file
+
+The AP and FP files must contain identical column names.
+
+### Output
+
+The utility generates a CSV file containing the final MifRix scores.
+
+
 ## SHAP Command
 
 Generate only the preprocessed AP/FP files without risk scoring or SHAP:
