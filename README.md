@@ -1,13 +1,13 @@
 # MifRix
 
-This repository contains the combined `MifRix` package with code plus a compressed archive of the model, explainer, taxonomy, and FP resources.
+This repository contains the combined `MifRix` package with code plus a compressed archive of the models, explainers, taxonomy, and FP resources.
 
 ## Package Layout
 
 The Python package is organized as:
 
-- `mifrix.risk_scores`: AP/FP preprocessing and risk scoring
-- `mifrix.shap`: AP SHAP explanation generation
+- `mifrix.risk_scores`: AP/FP preprocessing and risk-scoring
+- `mifrix.shap`: SHAP explanation generation using AP
 
 Installed command-line entry points:
 
@@ -24,7 +24,7 @@ Installed command-line entry points:
 
 ## Resource Setup
 
-MifRix ships the model, explainer, taxonomy, projection, and FP resources as split compressed archive parts. Each part is kept below GitHub's 100 MB file limit:
+MifRix ships the models, explainers, taxonomic abundance, Sub-signature profiles, and FP resources as split compressed archive parts. Each part is kept below GitHub's 100 MB file limit:
 
 ```text
 src/mifrix/resource_archives/mifrix_resources.tar.gz.part000
@@ -75,7 +75,7 @@ The unpacked directory contains:
 
 ## Example Data
 
-MifRix includes small WilsonB_2025 example files that show the expected input formats for risk scoring, AP SHAP, and SHAP projection.
+MifRix includes a taxa abundance dataset and corresponding metadata from a study-cohort WilsonB_2025 as example files that show the expected input formats for risk scoring, computing SHAP profiles using AP, and SHAP-based projection to find the disease-specific sub-signatures.
 
 List the packaged example files:
 
@@ -93,20 +93,20 @@ The copied files are:
 
 ```text
 ./mifrix_examples/
-  study1/
-    study1_AP.csv
-    study1_metadata.csv
+  WilsonB_2025/
+    WilsonB_2025_AP.csv
+    WilsonB_2025_metadata.csv
   projection/
-    study1_IBD_GutInflammation_AP_SHAP.csv
-    study1_projection_metadata.csv
+    WilsonB_2025_IBD_GutInflammation_AP_SHAP.csv
+    WilsonB_2025_projection_metadata.csv
 ```
 
 Example risk scoring:
 
 ```bash
 mifrix-risk-score \
-  ./mifrix_examples/study1/study1_AP.csv \
-  --metadata ./mifrix_examples/study1/study1_metadata.csv \
+  ./mifrix_examples/WilsonB_2025/WilsonB_2025_AP.csv \
+  --metadata ./mifrix_examples/WilsonB_2025/WilsonB_2025_metadata.csv \
   --scores-output-dir ./mifrix_example_outputs/risk
 ```
 
@@ -114,46 +114,46 @@ Example AP SHAP:
 
 ```bash
 mifrix-shap \
-  --ap-input ./mifrix_examples/study1/study1_AP.csv \
-  --metadata ./mifrix_examples/study1/study1_metadata.csv \
+  --ap-input ./mifrix_examples/WilsonB_2025/WilsonB_2025_AP.csv \
+  --metadata ./mifrix_examples/WilsonB_2025/WilsonB_2025_metadata.csv \
   --output-dir ./mifrix_example_outputs/shap \
   --diseases IBD_GutInflammation
 ```
 
-Example SHAP projection:
+Example of Disease sub-signature identification through SHAP values projection:
 
 ```bash
 shap-projection \
   --disease IBD_GutInflammation \
-  --shap-csv ./mifrix_examples/projection/study1_IBD_GutInflammation_AP_SHAP.csv \
-  --metadata-csv ./mifrix_examples/projection/study1_projection_metadata.csv \
+  --shap-csv ./mifrix_examples/projection/WilsonB_2025_IBD_GutInflammation_AP_SHAP.csv \
+  --metadata-csv ./mifrix_examples/projection/WilsonB_2025_projection_metadata.csv \
   --output-dir ./mifrix_example_outputs/projection
 ```
 
 ## What MifRix Does
 
-MifRix is designed for unseen-data risk scoring and SHAP explanation from microbiome species profiles.
+MifRix package is designed to predict risk-scores using taxonomic Abundance Profiles (AP) as well as Microbiome Functions (FP) and ultimately it computes the MifRix-final-score by integrating both AP- and FP-based score together. Then it computes SHAP-based explanations.
 
 Given:
 
-- one AP species profile CSV
-- one metadata CSV
+- one species abundance profile (AP) in CSV format
+- one metadata in CSV format
 
 MifRix risk scoring runs:
 
-1. taxonomy normalization
+1. taxonomic nomenclature homogenization
 2. AP normalization/collapse
-3. FP matrix generation
-4. AP scoring
-5. FP scoring
+3. FP generation
+4. AP risk-scoring
+5. FP risk-scoring
 
 and produces:
 
 - a `MAP_*.csv` taxonomy mapping file
 - a normalized AP file
 - an FP file
-- AP risk score output
-- FP risk score output
+- AP risk-score output
+- FP risk-score output
 
 The SHAP module can then run saved AP explainers and produce disease-wise per-instance SHAP values plus global SHAP importance tables.
 The SHAP projection command can then project AP SHAP values into saved disease-wise PCA spaces.
@@ -203,8 +203,8 @@ mifrix-risk-score \
 
 MifRix runtime needs two inputs:
 
-1. species profile CSV
-2. metadata CSV
+1. species abundance profile in CSV
+2. metadata in CSV
 
 ### Species profile CSV
 
@@ -254,7 +254,7 @@ How MifRix uses the metadata:
   - optional; copied to the final AP/FP outputs when present
 - `Sequence Type`
   - used to create `Is16s`
-  - values containing `16` become `1`
+  - values containing `16s` become `1`
   - `WGS` becomes `0`
 - `Cohort Type`
   - used to create `IsIndustrialized`
@@ -369,12 +369,12 @@ Options:
 ## MifRix Final Score
 
 After generating AP and FP risk scores using the MifRix risk-scoring
-pipeline, the final MifRix score can be calculated using the provided
+pipeline, the MifRix-final-score can be calculated using the provided
 R utility.
 
 ### Usage
 
-The final-score utility is provided in:
+The MifRix-final-score utility is provided in:
 
 `MifRix_final_score/Compute_MifRix_final_score.R`
 
@@ -421,7 +421,7 @@ The AP and FP files must contain identical column names.
 The utility generates a CSV file containing the final MifRix scores.
 
 
-## SHAP Command
+## Only Preprocessing
 
 Generate only the preprocessed AP/FP files without risk scoring or SHAP:
 
@@ -441,6 +441,8 @@ mifrix-preprocess \
   --normalized-ap-output /path/to/normalized_AP.csv \
   --fp-matrix-output /path/to/generated_FP.csv
 ```
+
+## Computing SHAP profiles
 
 Use this when the AP file has already been prepared:
 
@@ -484,8 +486,9 @@ List available diseases/control:
 mifrix-shap --list-diseases
 mifrix-shap-ap --list-diseases
 ```
+## Disease sub-signatures identification using SHAP-based PCA space
 
-Project AP SHAP values into the saved PCA space:
+Project AP-based SHAP values into the saved PCA space:
 
 ```bash
 shap-projection \
@@ -516,7 +519,7 @@ Projection outputs are written as:
   <disease>_projection_results.RData
 ```
 
-## Typical outputs
+## Typical outputs after a full run
 
 Main outputs from a full run:
 
