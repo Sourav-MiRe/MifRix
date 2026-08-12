@@ -366,7 +366,7 @@ Options:
 - `--resource-dir`
   - optional directory containing resources unpacked by `mifrix-unpack-resources`
 
-## MifRix Final Score
+## MifRix-final-score
 
 After generating AP and FP risk scores using the MifRix risk-scoring
 pipeline, the MifRix-final-score can be calculated using the provided
